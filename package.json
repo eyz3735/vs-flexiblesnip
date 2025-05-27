@@ -17,8 +17,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "vs-flexiblesnip.helloWorld",
-        "title": "Hello World"
+        "command": "flexiblesnip.openSnippetJson",
+        "title": "Open FlexibleSnip snippet.json"
       }
     ]
   },

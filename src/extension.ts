@@ -38,6 +38,26 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	);
 
+	const openSnippetJsonCmd = vscode.commands.registerCommand('flexiblesnip.openSnippetJson', async () => {
+    const workspaceFolders = vscode.workspace.workspaceFolders;
+    let targetUri: vscode.Uri | undefined;
+
+    if (workspaceFolders && workspaceFolders.length > 0) {
+      targetUri = vscode.Uri.joinPath(workspaceFolders[0].uri, 'snippet.json');
+      try {
+        await vscode.workspace.fs.stat(targetUri);
+      } catch {
+        const extSnippetUri = vscode.Uri.joinPath(context.extensionUri, 'snippet.json');
+        const content = await vscode.workspace.fs.readFile(extSnippetUri);
+        await vscode.workspace.fs.writeFile(targetUri, content);
+      }
+      await vscode.commands.executeCommand('vscode.open', targetUri);
+    } else {
+      const extSnippetUri = vscode.Uri.joinPath(context.extensionUri, 'snippet.json');
+      await vscode.commands.executeCommand('vscode.open', extSnippetUri);
+    }
+	});
+	context.subscriptions.push(openSnippetJsonCmd);
 	context.subscriptions.push(provider);
 
 	// Reload snippets when the snippet.json file is changed
